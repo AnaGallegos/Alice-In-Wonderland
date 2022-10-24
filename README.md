@@ -16,4 +16,4 @@ Which steps we'll take:
 - Calculate the histogram
 - Print the histogram
 
-![image](https://user-images.githubusercontent.com/113164779/197579726-2a9df19b-1c31-4bd2-bdc0-9ce1d2f63452.png)
+![image](https://user-images.githubusercontent.com/113164779/197627674-5d5d3584-1d33-4a3d-b983-d1eed40cd06f.png)
