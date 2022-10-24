@@ -4,6 +4,7 @@ import string
 import math
 import matplotlib.pyplot as plt
 import seaborn as sns
+import pandas 
 
 """First, we get our text and we turn it into a string"""
 alice = open("Alice.txt", "r", encoding="utf8")
@@ -11,14 +12,11 @@ raw_alice = alice.read()
 alice.close()
 raw_alice = raw_alice.replace("—", " ").split()
 
-
 """We create a set with all the stopwords"""
 english_read = open("stopwords_english.txt", "r", encoding="utf-8-sig")
 stop_words = english_read.read()
 english_read.close()
 stop_words = set(stop_words.replace("'", "’").split())
-
-
 
 def remove_stopwords(text):
     # Recives a list and creates a new list with no stop words
@@ -65,7 +63,8 @@ def word_count(text):
 def word_probability(dict):
     """
     Recives a dictionary with the frequency of each word
-    and returns a dictionary with the probability
+    and returns a dictionary with the probability. Only catches
+    words with more than 1% probability
     """
     total_words = len(dict_alice)
     all_dict = {word:(freq*100/total_words) for (word,freq) in dict.items()}
@@ -73,22 +72,52 @@ def word_probability(dict):
 
 def get_hist(dict):
     #getting the frecuency of each word in # (if the word has a 100% of probability to appear in the text, it has 50 #)
-    return (dict[0], math.ceil(dict[1] / 2) * '#')
+    return (dict[0], math.ceil(dict[1] / 2) * '🐇')
        
 def display_histogram(prob_dict):
     #print each word with its number of # in a different line (display the histogram)
     histogram = dict(map(get_hist, prob_dict.items()))  
-    for k, v in histogram.items():
-        print(k,':', v)
+    for key, value in histogram.items():
+        print(key,':', value)
 
+# Now we clean the data with the functions we created 
 text_normAlice = normalize(raw_alice)
 stop_alice = remove_stopwords(text_normAlice)
 dict_alice = word_count(stop_alice)
 prob_alice = word_probability(dict_alice)
-print(display_histogram(prob_alice))
 
-hist = sns.barplot(data= prob_alice, x=prob_alice.items(), y="count")
-hist.set_title("Histogram of Word Frequency", fontsize=40)
-hist.set_ylabel("frequency",fontsize=25)
-plt.xticks(rotation=45, fontsize=15)
-plt.show()
+"""
+Now that our data is clean we can choose how do we want to visualize it
+"""
+
+# First of all we'll save it in a csv to access the info when we need it again
+column_names = ["Word", "Prob"]
+data_frame = []
+for key, value in prob_alice.items():
+    data_frame.append({"Word": key, "Count": value})
+df = pandas.DataFrame(data_frame)
+df.to_csv("Alice.csv")
+
+
+while True:
+    # We ask the user what they want to do
+    print("Hello! How do you want to visualize this data?")
+    print("1. A histogram with emojis! 🐇 \n2. A picture histogram 📈 ")
+    answer = input(" ")
+    if answer == "1":
+        print(display_histogram(prob_alice))
+        break
+    elif answer == "2":
+        df = df.sort_values("Count", ascending = False)
+        pal = sns.color_palette("RdPu", len(df))
+        pal.reverse()
+        result = sns.barplot(data=df, x='Word', y='Count', palette=pal)
+        result.set_title("Word Frequency")
+        result.set_ylabel("Frequency")
+        plt.xticks(rotation = 90)
+        plt.show()
+        break
+    else: 
+        print('I don\'t understand, please try again')
+        continue
+
