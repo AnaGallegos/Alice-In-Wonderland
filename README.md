@@ -15,3 +15,5 @@ Which steps we'll take:
 - Probability normalization
 - Calculate the histogram
 - Print the histogram
+
+![image](https://user-images.githubusercontent.com/113164779/197579726-2a9df19b-1c31-4bd2-bdc0-9ce1d2f63452.png)
