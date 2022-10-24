@@ -3,6 +3,7 @@ from nltk import *
 import string
 import math
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 """First, we get our text and we turn it into a string"""
 alice = open("Alice.txt", "r", encoding="utf8")
@@ -85,3 +86,9 @@ stop_alice = remove_stopwords(text_normAlice)
 dict_alice = word_count(stop_alice)
 prob_alice = word_probability(dict_alice)
 print(display_histogram(prob_alice))
+
+hist = sns.barplot(data= prob_alice, x=prob_alice.items(), y="count")
+hist.set_title("Histogram of Word Frequency", fontsize=40)
+hist.set_ylabel("frequency",fontsize=25)
+plt.xticks(rotation=45, fontsize=15)
+plt.show()
